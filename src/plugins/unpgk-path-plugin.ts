@@ -9,10 +9,11 @@ export const unpkgPathPlugin = () => {
         return { path: 'index.js', namespace: 'a' };
       });
       // Handle rel paths in module
-      build.onResolve({ filter: /(^\.+\/$)/ }, async (args: any) => {
+      build.onResolve({ filter: /^\.+\// }, (args: any) => {
         return {
           namespace: 'a',
-          path: new URL(args.path, `https://unpkg.com${args.resolveDir}/`).href,
+          path: new URL(args.path, 'https://unpkg.com' + args.resolveDir + '/')
+            .href,
         };
       });
       // Handle main file of a module
