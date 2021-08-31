@@ -1,6 +1,8 @@
 import * as esbuild from 'esbuild-wasm';
 import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
+import { unpkgPathPlugin } from './plugins/unpgk-path-plugin';
+import { fetchPlugin } from './plugins/fetch-plugin';
 
 const App = () => {
   const esBuildRef = useRef<any>();
@@ -19,11 +21,18 @@ const App = () => {
 
   const onClick = async () => {
     if (!esBuildRef.current) return;
-    const result = await esBuildRef.current.transform(inputText, {
-      loader: 'jsx',
-      target: 'es2015',
+    const result = await esBuildRef.current.build({
+      entryPoints: ['index.js'],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin(), fetchPlugin(inputText)],
+      define: {
+        'process.env.NODE_ENV': '"production"',
+        global: 'window',
+      },
     });
-    setCode((code) => (code = result.code));
+
+    setCode((code) => (code = result.outputFiles[0].text));
   };
 
   useEffect(() => {
@@ -41,7 +50,7 @@ const App = () => {
       <div>
         <button onClick={onClick}>Submit</button>
       </div>
-      <pre>{code}</pre>
+      <code>{code}</code>
     </div>
   );
 };
