@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { unpkgPathPlugin } from './plugins/unpgk-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
+import CodeEditor from './components/code-editor';
 
 const App = () => {
   const esBuildRef = useRef<any>();
@@ -35,7 +36,6 @@ const App = () => {
       },
     });
 
-    // setCode((code) => (code = result.outputFiles[0].text));
     iFrameRef.current.contentWindow.postMessage(
       result.outputFiles[0].text,
       '*'
@@ -72,6 +72,7 @@ const App = () => {
 
   return (
     <div>
+      <CodeEditor />
       <textarea
         rows={10}
         cols={20}
