@@ -1,5 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
 import ReactDOM from 'react-dom';
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
 import { useState, useEffect, useRef } from 'react';
 import { unpkgPathPlugin } from './plugins/unpgk-path-plugin';
 import { fetchPlugin } from './plugins/fetch-plugin';
@@ -76,12 +77,6 @@ const App = () => {
         initialValue='const a = 1;'
         onChange={(value) => setInputText(value)}
       />
-      {/* <textarea
-        rows={10}
-        cols={20}
-        value={inputText}
-        onChange={(e) => setInputText(e.target.value)}
-      ></textarea> */}
       <div>
         <button onClick={onClick}>Submit</button>
       </div>
