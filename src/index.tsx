@@ -6,10 +6,10 @@ import { fetchPlugin } from './plugins/fetch-plugin';
 
 const App = () => {
   const esBuildRef = useRef<any>();
+  const iFrameRef = useRef<any>();
+
   // User input text
   const [inputText, setInputText] = useState<string>('');
-  // Output from ESBuild
-  const [code, setCode] = useState<string>('');
 
   // inits esbuild
   const startService = async () => {
@@ -21,6 +21,9 @@ const App = () => {
 
   const onClick = async () => {
     if (!esBuildRef.current) return;
+
+    iFrameRef.current.srcdoc = html;
+
     const result = await esBuildRef.current.build({
       entryPoints: ['index.js'],
       bundle: true,
@@ -32,12 +35,40 @@ const App = () => {
       },
     });
 
-    setCode((code) => (code = result.outputFiles[0].text));
+    // setCode((code) => (code = result.outputFiles[0].text));
+    iFrameRef.current.contentWindow.postMessage(
+      result.outputFiles[0].text,
+      '*'
+    );
   };
 
   useEffect(() => {
     startService();
   }, []);
+
+  const html = `
+  <html>
+    <head></head>
+    <body>
+      <div id='root'></div>
+      <script>
+        window.addEventListener(
+        'message',
+        (e) => {
+          try {
+            eval(e.data)
+          } catch (err) {
+            const root = document.querySelector('#root');
+            root.innerHTML = \`<div style="color: red;"><h4>Runtime Error</h4>\${err}</div>\`;
+            console.error(err);
+          }
+        },
+        false
+        );
+      </script>
+    </body>
+  </html>
+  `;
 
   return (
     <div>
@@ -50,7 +81,12 @@ const App = () => {
       <div>
         <button onClick={onClick}>Submit</button>
       </div>
-      <code>{code}</code>
+      <iframe
+        title='codeIFrame'
+        srcDoc={html}
+        sandbox='allow-scripts'
+        ref={iFrameRef}
+      ></iframe>
     </div>
   );
 };
