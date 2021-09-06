@@ -32,9 +32,6 @@ const CodeCell = () => {
             onChange={(value) => setInputText(value)}
           />
         </Resizable>
-        {/* <div>
-          <button onClick={onClick}>Submit</button>
-        </div> */}
         <Preview code={code} bundleErr={bundleErr} />
       </div>
     </Resizable>
