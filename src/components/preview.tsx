@@ -3,6 +3,7 @@ import './preview.css';
 
 interface PreviewProps {
   code: string;
+  bundleErr: string;
 }
 
 const html = `
@@ -20,6 +21,7 @@ const html = `
 
         // for async errors
         window.addEventListener('error', (e) => {
+          e.preventDefault();
           handleError(e.error);
         })
 
@@ -40,7 +42,7 @@ const html = `
   </html>
   `;
 
-const Preview: React.FC<PreviewProps> = ({ code }) => {
+const Preview: React.FC<PreviewProps> = ({ code, bundleErr }) => {
   const iFrameRef = useRef<any>();
 
   useEffect(() => {
@@ -58,7 +60,12 @@ const Preview: React.FC<PreviewProps> = ({ code }) => {
         srcDoc={html}
         sandbox='allow-scripts'
         ref={iFrameRef}
-      ></iframe>
+      />
+      {bundleErr && (
+        <div className='preview-error'>
+          <p>{bundleErr}</p>
+        </div>
+      )}
     </div>
   );
 };

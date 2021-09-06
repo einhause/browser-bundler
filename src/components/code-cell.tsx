@@ -9,11 +9,14 @@ const CodeCell = () => {
   const [inputText, setInputText] = useState<string>('');
   // Code state
   const [code, setCode] = useState('');
+  // errors from bundling
+  const [bundleErr, setBundleErr] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(async () => {
       const output = await bundle(inputText);
-      setCode(output);
+      setCode(output.code);
+      setBundleErr(output.err);
     }, 750);
     return () => {
       clearTimeout(timer);
@@ -32,7 +35,7 @@ const CodeCell = () => {
         {/* <div>
           <button onClick={onClick}>Submit</button>
         </div> */}
-        <Preview code={code} />
+        <Preview code={code} bundleErr={bundleErr} />
       </div>
     </Resizable>
   );
