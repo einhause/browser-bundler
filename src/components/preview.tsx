@@ -12,16 +12,26 @@ const html = `
     <body>
       <div id='root'></div>
       <script>
+        const handleError = (err) => {
+          const root = document.querySelector('#root');
+          root.innerHTML = \`<div style="color: red;"><h4>Runtime Error</h4>\${err}</div>\`;
+          console.error(err);
+        };
+
+        // for async errors
+        window.addEventListener('error', (e) => {
+          handleError(e.error);
+        })
+
+        // for sync errors
         window.addEventListener(
         'message',
         (e) => {
           try {
-            eval(e.data)
+            eval(e.data);
           } catch (err) {
-            const root = document.querySelector('#root');
-            root.innerHTML = \`<div style="color: red;"><h4>Runtime Error</h4>\${err}</div>\`;
-            console.error(err);
-          }
+            handleError(err);
+          } 
         },
         false
         );
