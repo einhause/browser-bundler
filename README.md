@@ -1,3 +1,5 @@
+#### Site URL: https://einhause-browser-bundler.netlify.app/
+
 ## JavaScript bundler in the browser
 
 ### In this application, the user is able to bundle and compile JavaScript code in the browser. Additional features include:
