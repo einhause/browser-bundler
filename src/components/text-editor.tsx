@@ -29,7 +29,7 @@ const TextEditor: React.FC<TextEditorProps> = ({ cell }) => {
     return (
       <div className='text-editor' ref={MDEditorRef}>
         <MDEditor
-          value={cell.content}
+          value={cell.content ?? ''}
           onChange={(v) => updateCell(cell.id, v ?? '')}
         />
       </div>
